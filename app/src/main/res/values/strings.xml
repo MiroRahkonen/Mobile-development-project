@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Notes</string>
+    <string name="placeholder_name">Title</string>
+    <string name="title_login">Login</string>
+    <string name="title_register">Register account</string>
+
+    <string name="label_email">E-mail</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+
+    <string name="hint_login_username">Type username…</string>
+    <string name="hint_login_password">Type password…</string>
+    <string name="hint_register_email">Must be valid e-mail</string>
+    <string name="hint_register_username">At least 4 characters </string>
+    <string name="hint_register_password">At least 8 characters</string>
+
+    <string name="button_login">Login</string>
+    <string name="button_register">Register</string>
+    <string name="button_back">Back</string>
+
+    <string name="register_text">No account?\nRegister one below</string>
+</resources>
