@@ -41,22 +41,14 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         appbar_back_button.setVisibility(View.VISIBLE);
 
         // Create listener for back button
-        appbar_back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        appbar_back_button.setOnClickListener(v -> finish());
 
         //Create listener for register button
-        register_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username_input = username_tv.getText().toString();
-                String email_input = email_tv.getText().toString();
-                String password_input = password_tv.getText().toString();
-                finish();
-            }
+        register_button.setOnClickListener(v -> {
+            String username_input = username_tv.getText().toString();
+            String email_input = email_tv.getText().toString();
+            String password_input = password_tv.getText().toString();
+            finish();
         });
         disableRegisterButton(); //On startup make register button unclickable
     }

@@ -8,10 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher {
     protected TextView username_tv;
@@ -38,24 +35,18 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
         password_tv.addTextChangedListener(this);
 
         //Clicking login button
-        login_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username_input = username_tv.getText().toString();
-                String password_input = password_tv.getText().toString();
-                Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(mainIntent);
-            }
+        login_button.setOnClickListener(v ->{
+            String username_input = username_tv.getText().toString();
+            String password_input = password_tv.getText().toString();
+            Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
+            startActivity(mainIntent);
         });
         disableLoginButton(); //On startup make login unclickable
 
         // Clicking register button, redirects to register account screen
-        goto_register_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(registerIntent);
-            }
+        goto_register_button.setOnClickListener(v -> {
+            Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(registerIntent);
         });
     }
 
