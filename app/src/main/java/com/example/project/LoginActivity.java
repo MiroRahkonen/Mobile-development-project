@@ -3,51 +3,75 @@ package com.example.project;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher {
     protected TextView username_tv;
     protected TextView password_tv;
     protected Button login_button;
+    protected DBManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // SQLite DB init
+        dbManager = new DBManager(this);
+        dbManager.open();
+
         // Initializing elements
-        TextView title_tv= (TextView) findViewById(R.id.title_tv);
+        TextView title_tv= findViewById(R.id.title_tv);
         title_tv.setText(getString(R.string.title_login));
+        login_button = findViewById(R.id.login_button);
+        Button goto_register_button = findViewById(R.id.goto_register_button);
 
-        login_button = (Button) findViewById(R.id.login_button);
-        Button goto_register_button = (Button) findViewById(R.id.goto_register_button);
-
-        username_tv = (TextView) findViewById(R.id.login_username_tv);
-        password_tv = (TextView) findViewById(R.id.login_password_tv);
+        username_tv = findViewById(R.id.login_username_tv);
+        password_tv = findViewById(R.id.login_password_tv);
 
         //Add TextViews onto TextWatcher
         username_tv.addTextChangedListener(this);
         password_tv.addTextChangedListener(this);
 
-        //Clicking login button
         login_button.setOnClickListener(v ->{
-            String username_input = username_tv.getText().toString();
-            String password_input = password_tv.getText().toString();
-            Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
-            startActivity(mainIntent);
-        });
-        disableLoginButton(); //On startup make login unclickable
+            String username = username_tv.getText().toString();
+            String password= password_tv.getText().toString();
 
-        // Clicking register button, redirects to register account screen
+            // DB returns cursor, which contains user data if login is successful
+            Cursor db_response = dbManager.attemptLogin(username,password);
+            if(db_response == null){
+                password_tv.setError("Password is incorrect");
+                Toast.makeText(LoginActivity.this,"Invalid credentials",Toast.LENGTH_SHORT).show();
+            }
+            else if(db_response.getCount() > 0){
+                db_response.moveToFirst();
+                String user = db_response.getString(0);
+                String email = db_response.getString(1);
+                String pswd= db_response.getString(2);
+
+                //Toast.makeText(LoginActivity.this,"Successfully logged in",Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this,user,Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this,email,Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this,pswd,Toast.LENGTH_SHORT).show();
+                /*Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(mainIntent);*/
+            }
+
+        });
+
+        // Redirects to account registration screen
         goto_register_button.setOnClickListener(v -> {
             Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(registerIntent);
         });
+
+        disableLoginButton(); //On startup make login un-clickable
     }
 
     protected void disableLoginButton(){

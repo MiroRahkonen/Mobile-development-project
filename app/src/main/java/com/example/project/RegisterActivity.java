@@ -2,6 +2,7 @@ package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
@@ -17,6 +19,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     protected TextView email_tv;
     protected TextView password_tv;
     protected Button register_button;
+    protected DBManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +27,16 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        TextView title_tv = (TextView) findViewById(R.id.title_tv);
-        ImageButton appbar_back_button = (ImageButton) findViewById(R.id.back_button);
-        register_button = (Button) findViewById(R.id.register_account_button);
-        username_tv = (TextView) findViewById(R.id.register_username_tv);
-        email_tv = (TextView) findViewById(R.id.register_email_tv);
-        password_tv = (TextView) findViewById(R.id.register_password_tv);
+        // SQLite DB init
+        dbManager = new DBManager(this);
+        dbManager.open();
+
+        TextView title_tv = findViewById(R.id.title_tv);
+        ImageButton appbar_back_button = findViewById(R.id.back_button);
+        register_button = findViewById(R.id.register_account_button);
+        username_tv = findViewById(R.id.register_username_tv);
+        email_tv = findViewById(R.id.register_email_tv);
+        password_tv = findViewById(R.id.register_password_tv);
 
         //Add TextViews into TextWatcher
         username_tv.addTextChangedListener(this);
@@ -45,12 +52,21 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
         //Create listener for register button
         register_button.setOnClickListener(v -> {
-            String username_input = username_tv.getText().toString();
-            String email_input = email_tv.getText().toString();
-            String password_input = password_tv.getText().toString();
-            finish();
+            String username = username_tv.getText().toString();
+            String email = email_tv.getText().toString();
+            String password = password_tv.getText().toString();
+
+            // Attempt account creation on SQLite database
+            Cursor db_response = dbManager.createUser(username, email, password);
+            if(db_response == null){
+                Toast.makeText(RegisterActivity.this,"Registration failed, username already in use",Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(RegisterActivity.this,"Account successfully created",Toast.LENGTH_SHORT).show();
+                finish();
+            }
         });
-        disableRegisterButton(); //On startup make register button unclickable
+        disableRegisterButton(); //On startup make register button un-clickable
     }
 
     protected void disableRegisterButton(){
