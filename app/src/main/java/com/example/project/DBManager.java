@@ -27,30 +27,59 @@ public class DBManager {
         dbHelper.close();
     }
 
-    public Cursor createUser(String username, String email, String password){
+    public boolean createUser(String username, String email, String password){
         //Stop if account with supplied username already exists
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ?",new String[]{username},null);
+        String[] user = {username};
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ?",user,null);
         if(cursor.getCount() > 0){
-            return null;
+            return false;
         }
+        cursor.close();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.USERNAME,username);
         contentValues.put(DBHelper.EMAIL,email);
         contentValues.put(DBHelper.PASSWORD,password);
-        long result = db.insert(DBHelper.TABLE_NAME,null,contentValues);
+        long result = db.insert(DBHelper.USER_TABLE,null,contentValues);
         if(result == -1){ //-1 = ERROR
-            return null;
+            return false;
         }
-        return cursor;
+        else{
+            return true;
+        }
     }
 
     public Cursor attemptLogin(String username, String password){
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?",new String[]{username,password},null);
+        String[] credentials = {username,password};
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?",credentials,null);
         if(cursor.getCount() > 0){
             return cursor;
         }
         else{
+            cursor.close();
+            return null;
+        }
+    }
+
+    public boolean createNote(String username,String note){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.USERNAME,username);
+        contentValues.put(DBHelper.NOTE,note);
+        long result = db.insert(DBHelper.NOTE_TABLE,null,contentValues);
+        if(result == -1){
+            return false;
+        }
+        return true;
+    }
+
+    public Cursor fetchNotes(String username){
+        String[] user = {username};
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ?",user,null);
+        if(cursor.getCount() > 0){
+            return cursor;
+        }
+        else{
+            cursor.close();
             return null;
         }
     }

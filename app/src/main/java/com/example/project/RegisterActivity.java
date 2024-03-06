@@ -27,12 +27,12 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // SQLite DB init
+        // SQLite database init
         dbManager = new DBManager(this);
         dbManager.open();
 
-        TextView title_tv = findViewById(R.id.title_tv);
-        ImageButton appbar_back_button = findViewById(R.id.back_button);
+        TextView title_tv = findViewById(R.id.appbar_title_tv);
+        ImageButton appbar_back_button = findViewById(R.id.appbar_back_button);
         register_button = findViewById(R.id.register_account_button);
         username_tv = findViewById(R.id.register_username_tv);
         email_tv = findViewById(R.id.register_email_tv);
@@ -57,13 +57,13 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
             String password = password_tv.getText().toString();
 
             // Attempt account creation on SQLite database
-            Cursor db_response = dbManager.createUser(username, email, password);
-            if(db_response == null){
-                Toast.makeText(RegisterActivity.this,"Registration failed, username already in use",Toast.LENGTH_SHORT).show();
-            }
-            else{
+            boolean insert_success = dbManager.createUser(username, email, password);
+            if(insert_success){
                 Toast.makeText(RegisterActivity.this,"Account successfully created",Toast.LENGTH_SHORT).show();
                 finish();
+            }
+            else{
+                Toast.makeText(RegisterActivity.this,"Registration failed, username already in use",Toast.LENGTH_SHORT).show();
             }
         });
         disableRegisterButton(); //On startup make register button un-clickable
@@ -97,8 +97,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         }
 
         String email = email_tv.getText().toString();
-        boolean email_is_valid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
-        if(!email_is_valid){
+        boolean email_valid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        if(!email_valid){
             disableRegisterButton();
             return;
         }

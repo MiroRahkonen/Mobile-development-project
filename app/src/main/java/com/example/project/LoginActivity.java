@@ -27,15 +27,14 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
         dbManager.open();
 
         // Initializing elements
-        TextView title_tv= findViewById(R.id.title_tv);
+        TextView title_tv= findViewById(R.id.appbar_title_tv);
         title_tv.setText(getString(R.string.title_login));
         login_button = findViewById(R.id.login_button);
         Button goto_register_button = findViewById(R.id.goto_register_button);
-
         username_tv = findViewById(R.id.login_username_tv);
         password_tv = findViewById(R.id.login_password_tv);
 
-        //Add TextViews onto TextWatcher
+        //Adding TextViews into TextWatcher, triggers check to see if input is valid
         username_tv.addTextChangedListener(this);
         password_tv.addTextChangedListener(this);
 
@@ -43,26 +42,20 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
             String username = username_tv.getText().toString();
             String password= password_tv.getText().toString();
 
-            // DB returns cursor, which contains user data if login is successful
-            Cursor db_response = dbManager.attemptLogin(username,password);
-            if(db_response == null){
+            // Database returns cursor, which contains user data if login was successful
+            Cursor cursor = dbManager.attemptLogin(username,password);
+            if(cursor == null){
                 password_tv.setError("Password is incorrect");
                 Toast.makeText(LoginActivity.this,"Invalid credentials",Toast.LENGTH_SHORT).show();
             }
-            else if(db_response.getCount() > 0){
-                db_response.moveToFirst();
-                String user = db_response.getString(0);
-                String email = db_response.getString(1);
-                String pswd= db_response.getString(2);
-
-                //Toast.makeText(LoginActivity.this,"Successfully logged in",Toast.LENGTH_SHORT).show();
-                Toast.makeText(LoginActivity.this,user,Toast.LENGTH_SHORT).show();
-                Toast.makeText(LoginActivity.this,email,Toast.LENGTH_SHORT).show();
-                Toast.makeText(LoginActivity.this,pswd,Toast.LENGTH_SHORT).show();
-                /*Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(mainIntent);*/
+            else{
+                cursor.moveToFirst();
+                Toast.makeText(LoginActivity.this,"Successfully logged in",Toast.LENGTH_SHORT).show();
+                Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
+                mainIntent.putExtra("username",cursor.getString(0));
+                startActivity(mainIntent);
+                cursor.close();
             }
-
         });
 
         // Redirects to account registration screen
@@ -71,7 +64,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
             startActivity(registerIntent);
         });
 
-        disableLoginButton(); //On startup make login un-clickable
+        //On startup make login button un-clickable
+        disableLoginButton();
     }
 
     protected void disableLoginButton(){

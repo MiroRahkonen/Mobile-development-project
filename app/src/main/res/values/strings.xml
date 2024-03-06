@@ -19,4 +19,7 @@
     <string name="button_back">Back</string>
 
     <string name="register_text">No account?\nRegister one below</string>
+
+    <string name="button_add_note">Add</string>
+    <string name="hint_add_note">Type a new note</string>
 </resources>
