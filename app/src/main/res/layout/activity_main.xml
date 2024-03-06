@@ -21,6 +21,7 @@
 
     <EditText
         android:id="@+id/add_note_tv"
+        android:inputType="text"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="12dp"
@@ -30,7 +31,8 @@
         android:background="@drawable/edittext_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/add_note_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/add_note_button"

@@ -2,7 +2,6 @@ package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
