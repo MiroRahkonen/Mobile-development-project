@@ -72,15 +72,24 @@ public class DBManager {
         return true;
     }
 
-    public Cursor fetchNotes(String username){
-        String[] user = {username};
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ?",user,null);
-        if(cursor.getCount() > 0){
-            return cursor;
+    public boolean deleteNote(int id, String username){
+        String[] note_data = {String.valueOf(id),username};
+        long result = db.delete(DBHelper.NOTE_TABLE,"note_id = ? AND username=?",note_data);
+        if(result == -1){
+            return false;
         }
         else{
-            cursor.close();
-            return null;
+            return true;
         }
+    }
+
+    public Cursor fetchNotes(String username){
+        String[] user = {username};
+        return db.rawQuery("SELECT * FROM notes WHERE username = ?",user,null);
+    }
+
+    public Cursor fetchLatestNote(String username){
+        String[] user = {username};
+        return db.rawQuery("SELECT * FROM notes WHERE username = ? ORDER BY note_id DESC LIMIT 1",user);
     }
 }

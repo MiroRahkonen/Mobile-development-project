@@ -34,8 +34,6 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="#CCFF0000"
         android:drawableTop="@android:drawable/ic_menu_close_clear_cancel"
-        app:flow_horizontalAlign="center"
-        app:flow_verticalAlign="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

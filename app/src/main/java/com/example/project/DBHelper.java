@@ -19,11 +19,12 @@ public class DBHelper extends SQLiteOpenHelper
     public static final String PASSWORD = "password";
     //Note table information
     public static final String NOTE_TABLE = "notes";
+    public static final String NOTE_ID = "note_id";
     public static final String NOTE = "note";
 
 
     public DBHelper(Context context){
-        super(context,DBNAME,null,2);
+        super(context,DBNAME,null,3);
     }
 
     @Override
