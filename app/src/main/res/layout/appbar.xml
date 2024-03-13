@@ -16,22 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/appbar_back_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="12dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/white"
-        android:cropToPadding="false"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/appbar"
-        app:layout_constraintStart_toStartOf="@+id/appbar"
-        app:layout_constraintTop_toTopOf="@+id/appbar"
-        app:layout_constraintVertical_bias="0.592"
-        app:srcCompat="?attr/homeAsUpIndicator"
-        tools:ignore="ContentDescription" />
-
     <TextView
         android:id="@+id/appbar_title_tv"
         android:layout_width="wrap_content"
@@ -43,5 +27,35 @@
         app:layout_constraintEnd_toEndOf="@+id/appbar"
         app:layout_constraintStart_toStartOf="@+id/appbar"
         app:layout_constraintTop_toTopOf="@+id/appbar" />
+
+    <ImageButton
+        android:id="@+id/appbar_back_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/white"
+        android:cropToPadding="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/appbar"
+        app:layout_constraintStart_toStartOf="@+id/appbar"
+        app:layout_constraintTop_toTopOf="@+id/appbar"
+        app:layout_constraintVertical_bias="0.592"
+        app:srcCompat="?attr/homeAsUpIndicator"
+        tools:ignore="ContentDescription" />
+
+    <Button
+        android:id="@+id/appbar_logout_button"
+        android:layout_width="72dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/secondary"
+        android:text="@string/button_logout"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

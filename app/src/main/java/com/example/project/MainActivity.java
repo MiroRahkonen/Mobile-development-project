@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TextView appbar_title_tv = findViewById(R.id.appbar_title_tv);
+        Button appbar_logout_button = findViewById(R.id.appbar_logout_button);
         Button add_note_button = findViewById(R.id.add_note_button);
         EditText add_note_tv = findViewById(R.id.add_note_tv);
 
@@ -36,14 +38,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         current_user = intent.getStringExtra("username");
 
-        //Initializing appbar title
+        //Initializing appbar
         String activity_title = current_user + "'s Notes";
         appbar_title_tv.setText(activity_title);
+        appbar_logout_button.setVisibility(View.VISIBLE);
 
         //SQLite database init
         dbManager = new DBManager(this);
         dbManager.open();
-        fetchAllNotes();
+        initializeNotes();
 
         notes_recyclerview = findViewById(R.id.notes_rv);
         notes_recyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -52,41 +55,29 @@ public class MainActivity extends AppCompatActivity {
         noteAdapter = new NoteAdapter(getApplicationContext(),notes);
         notes_recyclerview.setAdapter(noteAdapter);
 
+
+        // Add button at the bottom of the screen to insert new note into database
         add_note_button.setOnClickListener(v ->  {
-            String note = add_note_tv.getText().toString();
-            Toast.makeText(MainActivity.this,note,Toast.LENGTH_SHORT).show();
-            boolean success = dbManager.createNote(current_user,note);
-            if(success){
-                fetchNewestNote();
-                noteAdapter.notifyItemInserted(notes.size()-1);
-            }
-            else{
+            // Sending new note to database
+            Note new_note = dbManager.createNote(current_user,add_note_tv.getText().toString());
+            if(new_note == null){
                 Toast.makeText(MainActivity.this,"Error saving note...",Toast.LENGTH_SHORT).show();
             }
+            else{
+                notes.add(new_note);
+                noteAdapter.notifyItemInserted(notes.size()-1);
+            }
+        });
+
+        // Button in appbar to return to login screen
+        appbar_logout_button.setOnClickListener(v ->{
+            Toast.makeText(MainActivity.this,"Logged out of session",Toast.LENGTH_SHORT).show();
+            finish();
         });
     }
 
-    private void fetchAllNotes(){
-        Cursor cursor = dbManager.fetchNotes(current_user);
-        if (cursor.moveToFirst()) {
-            do{
-                int id = cursor.getInt(0);
-                String note = cursor.getString(1);
-                String user = cursor.getString(2);
-                notes.add(new Note(id,user,note));
-            } while(cursor.moveToNext());
-        }
-        cursor.close();
-    }
-
-    private void fetchNewestNote(){
-        try (Cursor cursor = dbManager.fetchLatestNote(current_user)) {
-            cursor.moveToFirst();
-            int id = cursor.getInt(0);
-            String note = cursor.getString(1);
-            String user = cursor.getString(2);
-            notes.add(new Note(id,user,note));
-        }
+    private void initializeNotes(){
+        notes = dbManager.fetchNotes(current_user);
     }
 }
 

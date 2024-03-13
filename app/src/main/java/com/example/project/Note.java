@@ -2,18 +2,18 @@ package com.example.project;
 
 public class Note{
     int id;
-    String title;
+    String message;
     String username;
 
-    public Note(int id, String title, String username) {
+    public Note(int id, String message, String username) {
         this.id = id;
         this.username = username;
-        this.title = title;
+        this.message = message;
     }
 
     public int getId(){return id;}
-    public String getTitle() {
-        return title;
+    public String getMessage() {
+        return message;
     }
 
     public String getUsername() {

@@ -42,19 +42,17 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
             String username = username_tv.getText().toString();
             String password= password_tv.getText().toString();
 
-            // Database returns cursor, which contains user data if login was successful
-            Cursor cursor = dbManager.attemptLogin(username,password);
-            if(cursor == null){
+            // Check if an user with supplied credentials exists
+            String found_username = dbManager.attemptLogin(username,password);
+            if(found_username == null){
                 password_tv.setError("Password is incorrect");
                 Toast.makeText(LoginActivity.this,"Invalid credentials",Toast.LENGTH_SHORT).show();
             }
             else{
-                cursor.moveToFirst();
                 Toast.makeText(LoginActivity.this,"Successfully logged in",Toast.LENGTH_SHORT).show();
                 Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
-                mainIntent.putExtra("username",cursor.getString(0));
+                mainIntent.putExtra("username",username);
                 startActivity(mainIntent);
-                cursor.close();
             }
         });
 

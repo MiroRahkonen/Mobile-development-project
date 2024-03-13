@@ -17,6 +17,7 @@
     <string name="button_login">Login</string>
     <string name="button_register">Register</string>
     <string name="button_back">Back</string>
+    <string name="button_logout">Logout</string>
 
     <string name="register_text">No account?\nRegister one below</string>
 

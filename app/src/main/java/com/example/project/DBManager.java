@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Created with help from this article
 //https://www.digitalocean.com/community/tutorials/android-sqlite-database-example-tutorial
 public class DBManager {
@@ -49,11 +52,11 @@ public class DBManager {
         }
     }
 
-    public Cursor attemptLogin(String username, String password){
-        String[] credentials = {username,password};
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?",credentials,null);
+    public String attemptLogin(String username, String password){
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?",new String[]{username,password},null);
         if(cursor.getCount() > 0){
-            return cursor;
+            cursor.close();
+            return username;
         }
         else{
             cursor.close();
@@ -61,35 +64,61 @@ public class DBManager {
         }
     }
 
-    public boolean createNote(String username,String note){
+    public Note createNote(String username,String message){
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.USERNAME,username);
-        contentValues.put(DBHelper.NOTE,note);
+        contentValues.put(DBHelper.MESSAGE,message);
+
         long result = db.insert(DBHelper.NOTE_TABLE,null,contentValues);
         if(result == -1){
-            return false;
+            return null;
         }
-        return true;
+
+        return fetchLatestNote(username);
+    }
+
+    public Note fetchLatestNote(String username){
+        // Fetch latest note
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ? ORDER BY note_id DESC LIMIT 1",new String[]{username});
+
+        // Create a new note if one is found
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(0);
+            String message = cursor.getString(1);
+            String user = cursor.getString(2);
+            cursor.close();
+            return new Note(id,user,message);
+        }
+        else{
+            cursor.close();
+            return null;
+        }
+    }
+
+    public List<Note> fetchNotes(String username){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ?",new String[]{username},null);
+
+        List<Note> notes = new ArrayList<>();
+        //Add all results to notes list in a loop
+        if (cursor.moveToFirst()) {
+            do{
+                int id = cursor.getInt(0);
+                String message = cursor.getString(1);
+                String user = cursor.getString(2);
+                notes.add(new Note(id,user,message));
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return notes;
     }
 
     public boolean deleteNote(int id, String username){
-        String[] note_data = {String.valueOf(id),username};
-        long result = db.delete(DBHelper.NOTE_TABLE,"note_id = ? AND username=?",note_data);
+        long result = db.delete(DBHelper.NOTE_TABLE,"note_id = ? AND username=?",new String[]{String.valueOf(id),username});
         if(result == -1){
             return false;
         }
         else{
             return true;
         }
-    }
-
-    public Cursor fetchNotes(String username){
-        String[] user = {username};
-        return db.rawQuery("SELECT * FROM notes WHERE username = ?",user,null);
-    }
-
-    public Cursor fetchLatestNote(String username){
-        String[] user = {username};
-        return db.rawQuery("SELECT * FROM notes WHERE username = ? ORDER BY note_id DESC LIMIT 1",user);
     }
 }

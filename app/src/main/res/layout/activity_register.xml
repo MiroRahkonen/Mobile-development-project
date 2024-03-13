@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/include"
-        layout="@layout/toolbar" />
+        layout="@layout/appbar" />
 
     <EditText
         android:id="@+id/register_username_tv"

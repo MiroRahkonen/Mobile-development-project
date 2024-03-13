@@ -20,17 +20,16 @@ public class DBHelper extends SQLiteOpenHelper
     //Note table information
     public static final String NOTE_TABLE = "notes";
     public static final String NOTE_ID = "note_id";
-    public static final String NOTE = "note";
-
+    public static final String MESSAGE = "message";
 
     public DBHelper(Context context){
-        super(context,DBNAME,null,3);
+        super(context,DBNAME,null,4);
     }
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
         db.execSQL("CREATE TABLE users (username TEXT PRIMARY KEY, email TEXT, password TEXT)");
-        db.execSQL("CREATE TABLE notes (note_id INTEGER PRIMARY KEY, username TEXT, note TEXT)");
+        db.execSQL("CREATE TABLE notes (note_id INTEGER PRIMARY KEY, username TEXT, message TEXT)");
     }
 
     @Override
