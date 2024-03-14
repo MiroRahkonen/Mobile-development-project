@@ -18,7 +18,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         note_username_textview = itemView.findViewById(R.id.note_username_textview);
         note_message_edittext = itemView.findViewById(R.id.note_message_edittext);
-        note_delete_button = itemView.findViewById(R.id.note_delete_button);
         note_edit_button = itemView.findViewById(R.id.note_edit_button);
+        note_delete_button = itemView.findViewById(R.id.note_delete_button);
     }
 }

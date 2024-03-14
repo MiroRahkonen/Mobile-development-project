@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,19 +49,19 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder>{
         });
 
         holder.note_delete_button.setOnClickListener(view -> {
-            boolean delete_success = dbManager.deleteNote(notes.get(position).getId(),notes.get(position).getUsername());
+            int note_id = notes.get(position).getId();
+            String message = notes.get(position).getMessage();
+            String username = notes.get(position).getUsername();
+
+            boolean delete_success = dbManager.deleteNote(note_id,username);
             if(delete_success){
                 Toast.makeText(context,"Note deleted!",Toast.LENGTH_SHORT);
-                notes = dbManager.fetchNotes(notes.get(position).getUsername());
+                int deleted_note_position = notes.indexOf(new Note(note_id,message,username));
+                Toast.makeText(context,String.valueOf(deleted_note_position),Toast.LENGTH_SHORT).show();
+                notes.remove(deleted_note_position);
                 notifyDataSetChanged();
-
-                //Optimal, but doesn't always delete the correct item
-                //notes.remove(position);
-                //notifyItemRemoved(position);
             }
         });
-
-
     }
     @Override
     public int getItemCount() {

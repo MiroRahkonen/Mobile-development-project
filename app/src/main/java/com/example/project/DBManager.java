@@ -66,8 +66,8 @@ public class DBManager {
 
     public Note createNote(String username,String message){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBHelper.USERNAME,username);
         contentValues.put(DBHelper.MESSAGE,message);
+        contentValues.put(DBHelper.USERNAME,username);
 
         long result = db.insert(DBHelper.NOTE_TABLE,null,contentValues);
         if(result == -1){
@@ -77,17 +77,17 @@ public class DBManager {
         return fetchLatestNote(username);
     }
 
-    public Note fetchLatestNote(String username){
+    public Note fetchLatestNote(String user){
         // Fetch latest note
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ? ORDER BY note_id DESC LIMIT 1",new String[]{username});
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ? ORDER BY note_id DESC LIMIT 1",new String[]{user});
 
         // Create a new note if one is found
         if (cursor.moveToFirst()) {
             int id = cursor.getInt(0);
             String message = cursor.getString(1);
-            String user = cursor.getString(2);
+            String username = cursor.getString(2);
             cursor.close();
-            return new Note(id,user,message);
+            return new Note(id,message,username);
         }
         else{
             cursor.close();
@@ -95,8 +95,8 @@ public class DBManager {
         }
     }
 
-    public List<Note> fetchNotes(String username){
-        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ?",new String[]{username},null);
+    public List<Note> fetchNotes(String user){
+        Cursor cursor = db.rawQuery("SELECT * FROM notes WHERE username = ?",new String[]{user},null);
 
         List<Note> notes = new ArrayList<>();
         //Add all results to notes list in a loop
@@ -104,16 +104,16 @@ public class DBManager {
             do{
                 int id = cursor.getInt(0);
                 String message = cursor.getString(1);
-                String user = cursor.getString(2);
-                notes.add(new Note(id,user,message));
+                String username = cursor.getString(2);
+                notes.add(new Note(id,message,username));
             } while(cursor.moveToNext());
         }
         cursor.close();
         return notes;
     }
 
-    public boolean deleteNote(int id, String username){
-        long result = db.delete(DBHelper.NOTE_TABLE,"note_id = ? AND username=?",new String[]{String.valueOf(id),username});
+    public boolean deleteNote(int id, String user){
+        long result = db.delete(DBHelper.NOTE_TABLE,"note_id = ? AND username=?",new String[]{String.valueOf(id),user});
         if(result == -1){
             return false;
         }

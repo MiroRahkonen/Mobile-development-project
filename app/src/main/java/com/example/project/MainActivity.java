@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         //SQLite database init
         dbManager = new DBManager(this);
         dbManager.open();
-        initializeNotes();
+        notes = dbManager.fetchNotes(current_user);
 
         notes_recyclerview = findViewById(R.id.notes_rv);
         notes_recyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -73,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this,"Logged out of session",Toast.LENGTH_SHORT).show();
             finish();
         });
-    }
-
-    private void initializeNotes(){
-        notes = dbManager.fetchNotes(current_user);
     }
 }
 
