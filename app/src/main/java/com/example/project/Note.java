@@ -21,7 +21,8 @@ public class Note{
     }
 
 
-    // equals override is required for IndexOf() function calls, checking for all variables
+    // help with this equals function from this answer on stackoverflow: https://stackoverflow.com/a/41061950
+    // equals override is required for IndexOf() function calls to find the correct object from Note list
     @Override
     public boolean equals(Object object) {
         if (object == this) return true;

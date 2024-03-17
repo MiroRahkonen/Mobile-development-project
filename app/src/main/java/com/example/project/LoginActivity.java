@@ -7,12 +7,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher {
-    protected TextView username_tv;
-    protected TextView password_tv;
+    protected EditText username_edittext;
+    protected EditText password_edittext;
     protected Button login_button;
     protected DBManager dbManager;
 
@@ -26,25 +27,25 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
         dbManager.open();
 
         // Initializing elements
-        TextView title_tv= findViewById(R.id.appbar_title_tv);
+        TextView title_tv= findViewById(R.id.appbar_title_textview);
         title_tv.setText(getString(R.string.title_login));
         login_button = findViewById(R.id.login_button);
         Button goto_register_button = findViewById(R.id.goto_register_button);
-        username_tv = findViewById(R.id.login_username_tv);
-        password_tv = findViewById(R.id.login_password_tv);
+        username_edittext = findViewById(R.id.login_username_edittext);
+        password_edittext = findViewById(R.id.login_password_edittext);
 
         //Adding TextViews into TextWatcher, triggers check to see if input is valid
-        username_tv.addTextChangedListener(this);
-        password_tv.addTextChangedListener(this);
+        username_edittext.addTextChangedListener(this);
+        password_edittext.addTextChangedListener(this);
 
         login_button.setOnClickListener(v ->{
-            String username = username_tv.getText().toString();
-            String password= password_tv.getText().toString();
+            String username = username_edittext.getText().toString();
+            String password= password_edittext.getText().toString();
 
             // Check if an user with supplied credentials exists
             String found_username = dbManager.attemptLogin(username,password);
             if(found_username == null){
-                password_tv.setError("Password is incorrect");
+                password_edittext.setError("Password is incorrect");
                 Toast.makeText(LoginActivity.this,"Invalid credentials",Toast.LENGTH_SHORT).show();
             }
             else{
@@ -85,12 +86,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         // Checking that every input is valid
-        String username = username_tv.getText().toString();
+        String username = username_edittext.getText().toString();
         if(username.length() < 4){
             disableLoginButton();
             return;
         }
-        String password = password_tv.getText().toString();
+        String password = password_edittext.getText().toString();
         if(password.length() < 8){
             disableLoginButton();
             return;

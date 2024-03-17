@@ -38,8 +38,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
         String username_text = "Added by: " +notes.get(position).getUsername();
-        holder.note_username_textview.setText(username_text);
+        String id_text = "ID: " + String.valueOf(notes.get(position).getId());
 
+        holder.note_username_textview.setText(username_text);
+        holder.note_id_textview.setText(id_text);
         holder.note_message_edittext.setText(notes.get(position).getMessage());
 
         // Note editing button in each RecyclerView item

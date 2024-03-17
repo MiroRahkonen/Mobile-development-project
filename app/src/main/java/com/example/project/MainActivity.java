@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView appbar_title_tv = findViewById(R.id.appbar_title_tv);
+        TextView appbar_title_textview = findViewById(R.id.appbar_title_textview);
         Button appbar_logout_button = findViewById(R.id.appbar_logout_button);
         Button add_note_button = findViewById(R.id.add_note_button);
-        EditText add_note_tv = findViewById(R.id.add_note_tv);
+        EditText add_note_edittext = findViewById(R.id.add_note_edittext);
 
         //Getting current user from the intent
         Intent intent = getIntent();
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Initializing appbar
         String activity_title = current_user + "'s Notes";
-        appbar_title_tv.setText(activity_title);
+        appbar_title_textview.setText(activity_title);
         appbar_logout_button.setVisibility(View.VISIBLE);
 
         //SQLite database init
@@ -54,11 +56,33 @@ public class MainActivity extends AppCompatActivity {
         noteAdapter = new NoteAdapter(getApplicationContext(),notes);
         notes_recyclerview.setAdapter(noteAdapter);
 
+        //Enable add note button only when some text has been entered
+        add_note_edittext.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(add_note_edittext.getText().length() > 0){
+                    add_note_button.setBackgroundTintList(getColorStateList(R.color.primary));
+                    add_note_button.setClickable(true);
+                    add_note_button.setTextColor(getColor(R.color.white));
+                } else{
+                    add_note_button.setBackgroundTintList(getColorStateList(R.color.inactive));
+                    add_note_button.setClickable(false);
+                    add_note_button.setTextColor(getColor(R.color.black));
+                }
+
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override public void afterTextChanged(Editable s) {}
+        });
+
+
 
         // Add button at the bottom of the screen to insert new note into database
         add_note_button.setOnClickListener(v ->  {
             // Sending new note to database
-            Note new_note = dbManager.createNote(current_user,add_note_tv.getText().toString());
+            Note new_note = dbManager.createNote(current_user,add_note_edittext.getText().toString());
             if(new_note == null){
                 Toast.makeText(MainActivity.this,"Error saving note...",Toast.LENGTH_SHORT).show();
             }
