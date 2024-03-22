@@ -72,10 +72,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     // TextWatcher tutorial from this article https://dzone.com/articles/how-to-monitor-textview-changes-in-android
     // Required TextWatcher functions
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         // Checking that every input is valid
         int password_length = password_edittext.getText().toString().length();
@@ -100,10 +96,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         enableRegisterButton();
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
+    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    @Override public void afterTextChanged(Editable s) {}
 
     protected void disableRegisterButton(){
         register_button.setClickable(false);
