@@ -44,12 +44,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder>{
         holder.note_id_textview.setText(id_text);
         holder.note_message_edittext.setText(notes.get(position).getMessage());
 
-        // Note editing button in each RecyclerView item
-        holder.note_edit_button.setOnClickListener(v ->{
-            holder.note_message_edittext.setFocusable(true);
-            holder.note_message_edittext.requestFocus();
-        });
-
         holder.note_delete_button.setOnClickListener(view -> {
             int note_id = notes.get(position).getId();
             String message = notes.get(position).getMessage();
@@ -59,7 +53,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder>{
             if(delete_success){
                 Toast.makeText(context,"Note deleted!",Toast.LENGTH_SHORT);
                 int deleted_note_position = notes.indexOf(new Note(note_id,message,username));
-                Toast.makeText(context,String.valueOf(deleted_note_position),Toast.LENGTH_SHORT).show();
                 notes.remove(deleted_note_position);
                 notifyDataSetChanged();
             }
