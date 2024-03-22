@@ -49,21 +49,26 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
                 Toast.makeText(LoginActivity.this,"Invalid credentials",Toast.LENGTH_SHORT).show();
             }
             else{
+                username_edittext.getText().clear();
+                password_edittext.getText().clear();
+
                 Toast.makeText(LoginActivity.this,"Successfully logged in",Toast.LENGTH_SHORT).show();
                 Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
                 mainIntent.putExtra("username",username);
                 startActivity(mainIntent);
             }
         });
+        //Initially make login button un-clickable
+        disableLoginButton();
 
         // Redirects to account registration screen
         goto_register_button.setOnClickListener(v -> {
+            username_edittext.getText().clear();
+            password_edittext.getText().clear();
+
             Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(registerIntent);
         });
-
-        //On startup make login button un-clickable
-        disableLoginButton();
     }
 
     protected void disableLoginButton(){

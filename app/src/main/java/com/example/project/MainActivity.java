@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         dbManager.open();
         notes = dbManager.fetchNotes(current_user);
 
-        notes_recyclerview = findViewById(R.id.notes_rv);
+        notes_recyclerview = findViewById(R.id.notes_recyclerview);
         notes_recyclerview.setLayoutManager(new LinearLayoutManager(this));
         notes_recyclerview.addItemDecoration(new DividerItemDecoration(notes_recyclerview.getContext(),DividerItemDecoration.VERTICAL));
 
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         add_note_edittext.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Keep add button hidden if there is no text
                 if(add_note_edittext.getText().length() > 0){
                     add_note_button.setBackgroundTintList(getColorStateList(R.color.primary));
                     add_note_button.setClickable(true);
@@ -69,13 +70,10 @@ public class MainActivity extends AppCompatActivity {
                     add_note_button.setClickable(false);
                     add_note_button.setTextColor(getColor(R.color.black));
                 }
-
             }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
         });
-
-
 
         // Add button at the bottom of the screen to insert new note into database
         add_note_button.setOnClickListener(v ->  {
@@ -85,8 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,"Error saving note...",Toast.LENGTH_SHORT).show();
             }
             else{
+                add_note_edittext.clearFocus();
+                add_note_edittext.getText().clear();
+
                 notes.add(new_note);
                 noteAdapter.notifyItemInserted(notes.size()-1);
+                notes_recyclerview.scrollToPosition(notes.size()-1);
             }
         });
 
@@ -97,4 +99,3 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
-
